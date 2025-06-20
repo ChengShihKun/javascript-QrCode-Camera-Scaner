@@ -74,6 +74,7 @@
 			for (const device of videoInputDevices) {
 			  if (/back|後/i.test(device.label)) {
 				selectedDeviceId = device.deviceId;
+				sourceSelect.value= device.deviceId;
 				break;
 			  }
 			}
