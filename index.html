@@ -21,11 +21,14 @@
   <main class="wrapper" style="padding-top:2em">
 
     <section class="container" id="demo-content">
-      <h1 class="title">Scan 1D/2D Code from Video Camera</h1>
 
       <div>
         <a class="button" id="startButton">Start</a>
         <a class="button" id="resetButton">Reset</a>
+		<div id="shareContainer" style="display: none; margin-top: 1em;">
+		  <button id="shareButton" class="button">🔗 分享掃描結果</button>
+		</div>
+
       </div>
 
       <div>
@@ -41,9 +44,6 @@
       <label>Result:</label>
       <pre>
 	  <code id="result"></code>
-		<div id="shareContainer" style="display: none; margin-top: 1em;">
-		  <button id="shareButton" class="button">🔗 分享掃描結果</button>
-		</div>
 	  </pre>
 
     </section>
