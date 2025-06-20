@@ -88,6 +88,9 @@
           document.getElementById('startButton').addEventListener('click', () => {
             codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
 			if (result) {
+			  //關掉掃描器
+			  codeReader.reset()
+				
 			  console.log(result);
 			  const text = result.text;
 			  document.getElementById('result').textContent = text;
@@ -131,7 +134,9 @@
 
           document.getElementById('resetButton').addEventListener('click', () => {
             codeReader.reset()
-            document.getElementById('result').textContent = '';
+            //document.getElementById('result').textContent = '';
+			// 隱藏分享與複製按鈕
+			document.getElementById('actionButtons').style.display = 'none';
             console.log('Reset.')
           })
 
