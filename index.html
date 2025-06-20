@@ -39,7 +39,7 @@
 
       <div id="sourceSelectPanel" style="display:none">
         <label for="sourceSelect">Change video source:</label>
-        <select id="sourceSelect" style="max-width:400px">
+        <select id="u.3104z83283d9 " style="max-width:400px">
         </select>
       </div>
 
@@ -47,6 +47,9 @@
       <pre>
 	  <code id="result"></code>
 	  </pre>
+	  
+	  <button id="torchButton" class="button">💡手電筒</button>
+
 
     </section>
 
@@ -62,8 +65,12 @@
   <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
   <script type="text/javascript">
     window.addEventListener('load', function () {
-      let selectedDeviceId;
+      let selectedDeviceId;	  	 
       const codeReader = new ZXing.BrowserMultiFormatReader()
+	  
+	  let track = null;
+	  let torchOn = false;
+	  
       console.log('ZXing code reader initialized')
       codeReader.listVideoInputDevices()
         .then((videoInputDevices) => {
@@ -138,7 +145,19 @@
                 console.error(err)
                 document.getElementById('result').textContent = err
               }
-            })
+            })/*.then((stream) => {
+				// 取得 video track
+				track = stream.getVideoTracks()[0];
+
+				// 檢查是否支援 torch
+				const capabilities = track.getCapabilities();
+				if (capabilities.torch) {
+				  document.getElementById('torchButton').style.display = 'inline-block';
+				} else {
+				  console.log('此裝置不支援手電筒');
+				}
+			  });
+			  */
             console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
           })
 
@@ -154,7 +173,25 @@
         .catch((err) => {
           console.error(err)
         })
+		
+		document.getElementById('torchButton').addEventListener('click', () => {
+		  if (!track) return;
+
+		  torchOn = !torchOn;
+		  track.applyConstraints({
+			advanced: [{ torch: torchOn }]
+		  }).then(() => {
+			document.getElementById('torchButton').textContent = torchOn ? '💡關閉手電筒' : '💡手電筒';
+		  }).catch((err) => {
+			console.error("無法切換手電筒", err);
+		  });
+		});
+		
+		
     })
+	
+	
+
   </script>
 
 </body>
