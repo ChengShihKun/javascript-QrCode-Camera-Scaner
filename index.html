@@ -68,7 +68,16 @@
       codeReader.listVideoInputDevices()
         .then((videoInputDevices) => {
           const sourceSelect = document.getElementById('sourceSelect')
-          selectedDeviceId = videoInputDevices[0].deviceId
+
+			// 嘗試找出 "back"（後鏡頭）作為預設
+			selectedDeviceId = videoInputDevices[0].deviceId; // 預設第一台
+			for (const device of videoInputDevices) {
+			  if (/back|後/i.test(device.label)) {
+				selectedDeviceId = device.deviceId;
+				break;
+			  }
+			}
+
           if (videoInputDevices.length >= 1) {
             videoInputDevices.forEach((element) => {
               const sourceOption = document.createElement('option')
