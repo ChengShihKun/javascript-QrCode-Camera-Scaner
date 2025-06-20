@@ -25,9 +25,11 @@
       <div>
         <a class="button" id="startButton">Start</a>
         <a class="button" id="resetButton">Reset</a>
-		<div id="shareContainer" style="display: none; margin-top: 1em;">
-		  <button id="shareButton" class="button">🔗 分享掃描結果</button>
+		<div id="actionButtons" style="display: none; margin-top: 1em;">
+		  <button id="shareButton" class="button">🔗分享</button>
+		  <button id="copyButton" class="button button-outline">📋複製</button>
 		</div>
+
 
       </div>
 
@@ -85,27 +87,39 @@
 
           document.getElementById('startButton').addEventListener('click', () => {
             codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-				if (result) {
-				  console.log(result)
-				  document.getElementById('result').textContent = result.text;
+			if (result) {
+			  console.log(result);
+			  const text = result.text;
+			  document.getElementById('result').textContent = text;
 
-				  // 顯示分享按鈕
-				  document.getElementById('shareContainer').style.display = 'block';
+			  // 顯示分享與複製按鈕
+			  document.getElementById('actionButtons').style.display = 'block';
 
-				  // 動態設定分享內容
-				  document.getElementById('shareButton').onclick = () => {
-					const text = result.text;
-					if (navigator.share) {
-					  navigator.share({
-						title: '掃描結果',
-						text: text,
-						url: window.location.href  // 或填你要分享的固定網址
-					  }).catch((err) => console.error("分享失敗", err));
-					} else {
-					  alert("你的瀏覽器不支援 Web Share API");
-					}
-				  };
+			  // 分享按鈕（只分享文字）
+			  document.getElementById('shareButton').onclick = () => {
+				if (navigator.share) {
+				  navigator.share({
+					title: '掃描結果',
+					text: text
+					//url: window.location.href  // 或填你要分享的固定網址
+				  }).catch((err) => console.error("分享失敗", err));
+				} else {
+				  alert("你的瀏覽器不支援分享功能");
 				}
+			  };
+
+			  // 複製按鈕
+			  document.getElementById('copyButton').onclick = async () => {
+				try {
+				  await navigator.clipboard.writeText(text);
+				  alert("已複製到剪貼簿！");
+				} catch (err) {
+				  alert("❌ 無法複製：請手動複製");
+				  console.error(err);
+				}
+			  };
+			}
+
 
               if (err && !(err instanceof ZXing.NotFoundException)) {
                 console.error(err)
